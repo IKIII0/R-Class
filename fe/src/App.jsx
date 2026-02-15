@@ -3,10 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import Navbar from "./components/Navbar";
 import Toast from "./components/Toast";
+import ParticleBackground from "./components/ParticleBackground";
 import CatalogPage from "./pages/CatalogPage";
 import WishlistPage from "./pages/WishlistPage";
 import TransactionPage from "./pages/TransactionPage";
 import { getWishlistCount } from "./api";
+import { FiShoppingBag } from "react-icons/fi";
 
 function App() {
   const [wishlistCount, setWishlistCount] = useState(0);
@@ -36,10 +38,11 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-bg-main">
+      <div className="min-h-screen bg-bg-main flex flex-col relative">
+        <ParticleBackground />
         <Navbar wishlistCount={wishlistCount} />
 
-        <main>
+        <main className="flex-1 relative z-10">
           <Routes>
             <Route
               path="/"
@@ -67,7 +70,7 @@ function App() {
         </main>
 
         {/* Toast Container */}
-        <div className="fixed top-20 right-4 z-[100] flex flex-col gap-2">
+        <div className="fixed top-20 right-5 z-[100] flex flex-col gap-2.5">
           {toasts.map((toast) => (
             <Toast
               key={toast.id}
@@ -79,11 +82,58 @@ function App() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 py-8 border-t border-card-border bg-white/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-text-muted text-sm">
-              © 2026 <span className="font-semibold text-primary">ShopWish</span>. All rights reserved.
-            </p>
+        <footer className="bg-navy text-white relative z-10">
+          <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-12 sm:py-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-8">
+              {/* Brand */}
+              <div className="lg:col-span-2">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+                    <FiShoppingBag className="text-white text-lg" />
+                  </div>
+                  <span className="text-xl font-bold tracking-tight">
+                    Shop<span className="text-primary-light">Wish</span>
+                  </span>
+                </div>
+                <p className="text-white/50 text-sm leading-relaxed max-w-sm">
+                  Destinasi belanja produk teknologi & gaya hidup premium. Jelajahi, simpan ke wishlist, dan pesan dengan mudah.
+                </p>
+              </div>
+
+              {/* Quick Links */}
+              <div>
+                <h4 className="font-semibold text-sm text-white/90 mb-4">Tautan Cepat</h4>
+                <ul className="flex flex-col gap-2.5">
+                  <li><a href="/" className="text-white/50 hover:text-primary-light text-sm transition-colors">Home</a></li>
+                  <li><a href="/wishlist" className="text-white/50 hover:text-primary-light text-sm transition-colors">Wishlist</a></li>
+                  <li><a href="/transactions" className="text-white/50 hover:text-primary-light text-sm transition-colors">Transactions</a></li>
+                </ul>
+              </div>
+
+              {/* Support */}
+              <div>
+                <h4 className="font-semibold text-sm text-white/90 mb-4">Dukungan</h4>
+                <ul className="flex flex-col gap-2.5">
+                  <li><span className="text-white/50 text-sm">Pusat Bantuan</span></li>
+                  <li><span className="text-white/50 text-sm">Kebijakan Privasi</span></li>
+                  <li><span className="text-white/50 text-sm">Syarat & Ketentuan</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="border-t border-white/10">
+            <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p className="text-white/40 text-xs">
+                © 2026 ShopWish. Hak cipta dilindungi.
+              </p>
+              <div className="flex items-center gap-5">
+                <a href="#" className="text-white/40 hover:text-primary-light transition-colors text-xs">Instagram</a>
+                <a href="#" className="text-white/40 hover:text-primary-light transition-colors text-xs">Twitter</a>
+                <a href="#" className="text-white/40 hover:text-primary-light transition-colors text-xs">Email</a>
+              </div>
+            </div>
           </div>
         </footer>
       </div>

@@ -18,7 +18,7 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
       const res = await getWishlist();
       setWishlistItems(res.data);
     } catch (err) {
-      onToast("Failed to load wishlist", "error");
+      onToast("Gagal memuat wishlist", "error");
     } finally {
       setLoading(false);
     }
@@ -28,10 +28,10 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
     try {
       await removeFromWishlist(productId);
       setWishlistItems((prev) => prev.filter((item) => item.product_id !== productId));
-      onToast("Removed from wishlist", "info");
+      onToast("Dihapus dari wishlist", "info");
       refreshWishlist();
     } catch (err) {
-      onToast("Failed to remove item", "error");
+      onToast("Gagal menghapus item", "error");
     }
   };
 
@@ -39,10 +39,10 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
     try {
       await createOrder(productId);
       setWishlistItems((prev) => prev.filter((item) => item.product_id !== productId));
-      onToast("Order placed successfully! 🎉", "success");
+      onToast("Pesanan berhasil dibuat! 🎉", "success");
       refreshWishlist();
     } catch (err) {
-      onToast("Failed to place order", "error");
+      onToast("Gagal membuat pesanan", "error");
     }
   };
 
@@ -51,47 +51,49 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-primary-100 border-t-primary rounded-full animate-spin" />
-          <p className="text-text-muted font-medium">Loading wishlist...</p>
+          <p className="text-text-muted font-medium">Memuat wishlist...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center">
-          <FiHeart className="text-2xl text-accent" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-text-dark">My Wishlist</h1>
-          <p className="text-text-muted text-sm">
-            {wishlistItems.length} {wishlistItems.length === 1 ? "item" : "items"} saved
-          </p>
+      <div className="bg-gradient-to-r from-accent/5 to-accent-soft rounded-2xl p-6 sm:p-8 mb-8 border border-accent/10">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center">
+            <FiHeart className="text-2xl text-accent" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-text-dark">Wishlist Saya</h1>
+            <p className="text-text-muted text-sm mt-0.5">
+              {wishlistItems.length} produk tersimpan
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Wishlist Items */}
       {wishlistItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <div className="w-24 h-24 bg-primary-50 rounded-full flex items-center justify-center mb-5">
-            <FiHeart className="text-4xl text-primary-light" />
+          <div className="w-24 h-24 bg-bg-main rounded-full flex items-center justify-center mb-5 border-2 border-card-border">
+            <FiHeart className="text-4xl text-text-muted" />
           </div>
-          <h2 className="text-xl font-semibold text-text-dark mb-2">Your wishlist is empty</h2>
-          <p className="text-text-muted text-sm mb-6 text-center max-w-sm">
-            Start adding products you love and come back to order them anytime!
+          <h2 className="text-xl font-semibold text-text-dark mb-2">Wishlist kamu masih kosong</h2>
+          <p className="text-text-muted text-sm mb-7 text-center max-w-sm leading-relaxed">
+            Mulai tambahkan produk favoritmu dan pesan kapan saja!
           </p>
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-light text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/25 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-navy-light to-navy text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-navy/30 transition-all cursor-pointer"
           >
             <FiShoppingBag />
             Browse Products
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
           {wishlistItems.map((item) => (
             <WishlistCard
               key={item.wishlist_id}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getProducts, addToWishlist, getWishlist, createOrder } from "../api";
 import ProductCard from "../components/ProductCard";
-import { FiShoppingBag, FiSearch } from "react-icons/fi";
+import { FiSearch, FiPackage } from "react-icons/fi";
 
 export default function CatalogPage({ onToast, refreshWishlist }) {
   const [products, setProducts] = useState([]);
@@ -19,7 +19,7 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
       setProducts(prodRes.data);
       setWishlistIds(new Set(wishRes.data.map((w) => w.product_id)));
     } catch (err) {
-      onToast("Failed to load products", "error");
+      onToast("Gagal memuat produk", "error");
     } finally {
       setLoading(false);
     }
@@ -29,13 +29,13 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
     try {
       await addToWishlist(productId);
       setWishlistIds((prev) => new Set([...prev, productId]));
-      onToast("Added to wishlist! 💙", "success");
+      onToast("Ditambahkan ke wishlist! 💙", "success");
       refreshWishlist();
     } catch (err) {
       if (err.response?.status === 409) {
-        onToast("Already in wishlist", "info");
+        onToast("Sudah ada di wishlist", "info");
       } else {
-        onToast("Failed to add to wishlist", "error");
+        onToast("Gagal menambahkan ke wishlist", "error");
       }
     }
   };
@@ -48,10 +48,10 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
         next.delete(productId);
         return next;
       });
-      onToast("Order placed successfully! 🎉", "success");
+      onToast("Pesanan berhasil dibuat! 🎉", "success");
       refreshWishlist();
     } catch (err) {
-      onToast("Failed to place order", "error");
+      onToast("Gagal membuat pesanan", "error");
     }
   };
 
@@ -66,46 +66,43 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-primary-100 border-t-primary rounded-full animate-spin" />
-          <p className="text-text-muted font-medium">Loading products...</p>
+          <p className="text-text-muted font-medium">Memuat produk...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary via-primary-light to-blue-400 rounded-3xl p-8 sm:p-12 mb-10 overflow-hidden">
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+      <div className="relative bg-gradient-to-br from-navy via-navy-light to-slate rounded-3xl p-8 sm:p-10 lg:p-14 mb-10 overflow-hidden">
+        {/* Decorative blurs */}
+        <div className="absolute top-0 right-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-56 h-56 bg-primary-light/15 rounded-full blur-3xl translate-y-1/3 -translate-x-1/6" />
+        <div className="absolute bottom-4 right-8 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
 
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-              <FiShoppingBag className="text-white text-xl" />
-            </div>
-            <span className="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
-              ✨ New Collection
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 tracking-tight">
-            Discover Amazing Products
+        <div className="relative z-10 max-w-2xl">
+          <span className="inline-flex items-center gap-1.5 bg-white/10 text-white/90 text-xs font-semibold px-3.5 py-1.5 rounded-full backdrop-blur-sm mb-5 border border-white/10">
+            <span className="w-1.5 h-1.5 bg-primary-light rounded-full animate-pulse" />
+            Koleksi Terbaru Tersedia
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 tracking-tight leading-tight">
+            Temukan Produk<br />Impianmu
           </h1>
-          <p className="text-white/80 text-base sm:text-lg max-w-xl">
-            Browse our curated collection of premium tech & lifestyle products. Add to your wishlist or order instantly.
+          <p className="text-white/60 text-sm sm:text-base max-w-lg leading-relaxed">
+            Jelajahi koleksi produk teknologi & gaya hidup pilihan kami. Tambahkan ke wishlist atau pesan langsung.
           </p>
 
           {/* Search Bar */}
-          <div className="mt-6 max-w-md">
+          <div className="mt-7 max-w-md">
             <div className="relative">
               <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Cari produk..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/95 backdrop-blur-sm text-sm text-text-dark placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg"
+                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white text-sm text-text-dark placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-xl shadow-navy/30"
               />
             </div>
           </div>
@@ -114,25 +111,28 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
 
       {/* Products Count */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-bold text-text-dark">
-          All Products{" "}
-          <span className="text-text-muted font-normal text-sm">
-            ({filteredProducts.length} items)
-          </span>
-        </h2>
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-primary-100 rounded-xl flex items-center justify-center">
+            <FiPackage className="text-primary-dark text-base" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-text-dark">Semua Produk</h2>
+            <p className="text-text-muted text-xs">{filteredProducts.length} produk tersedia</p>
+          </div>
+        </div>
       </div>
 
       {/* Product Grid */}
       {filteredProducts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16">
-          <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mb-4">
-            <FiSearch className="text-3xl text-primary-light" />
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="w-20 h-20 bg-bg-main rounded-full flex items-center justify-center mb-5 border-2 border-card-border">
+            <FiSearch className="text-3xl text-text-muted" />
           </div>
-          <p className="text-text-muted font-medium">No products found</p>
-          <p className="text-text-muted text-sm mt-1">Try a different search term</p>
+          <p className="text-text-dark font-semibold text-base">Produk tidak ditemukan</p>
+          <p className="text-text-muted text-sm mt-1">Coba kata pencarian lain</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

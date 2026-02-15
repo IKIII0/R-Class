@@ -5,26 +5,26 @@ export default function Navbar({ wishlistCount }) {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
       isActive
-        ? "bg-white/25 text-white shadow-md"
-        : "text-white/80 hover:bg-white/15 hover:text-white"
+        ? "bg-primary text-white shadow-md shadow-primary/30"
+        : "text-text-light hover:bg-navy-medium hover:text-white"
     }`;
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-gradient-to-r from-primary-dark via-primary to-primary-light shadow-lg shadow-primary/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-50 bg-navy border-b border-white/5">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
-          <NavLink to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all">
+          <NavLink to="/" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-all">
               <FiShoppingBag className="text-white text-lg" />
             </div>
             <span className="text-xl font-bold text-white tracking-tight">
-              Shop<span className="text-primary-50">Wish</span>
+              Shop<span className="text-primary-light">Wish</span>
             </span>
           </NavLink>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <NavLink to="/" end className={linkClass}>
               <FiHome className="text-base" />
               <span className="hidden sm:inline">Home</span>
@@ -34,7 +34,7 @@ export default function Navbar({ wishlistCount }) {
               <div className="relative">
                 <FiHeart className="text-base" />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-2 -right-2.5 bg-accent text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full shadow-md animate-bounce">
+                  <span className="absolute -top-2 -right-3 bg-accent text-white text-[10px] font-bold min-w-[18px] h-[18px] flex items-center justify-center rounded-full shadow-md shadow-accent/40 px-1">
                     {wishlistCount}
                   </span>
                 )}
