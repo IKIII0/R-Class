@@ -11,7 +11,7 @@ export default function Navbar({ wishlistCount }) {
 
   return (
     <nav className="sticky top-0 z-50 bg-navy border-b border-white/5">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
           <NavLink to="/" className="flex items-center gap-2.5 group">

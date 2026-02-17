@@ -49,9 +49,9 @@ export default function TransactionPage({ onToast }) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-10">
       {/* Header */}
-      <div className="bg-gradient-to-r from-navy via-navy-light to-slate rounded-2xl p-6 sm:p-8 mb-8 overflow-hidden relative">
+      <div className="bg-gradient-to-r from-navy via-navy-light to-slate rounded-2xl p-4 sm:p-8 mb-6 sm:mb-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-40 h-40 bg-primary/15 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
         <div className="relative z-10 flex items-center gap-4">
           <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm">

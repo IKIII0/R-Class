@@ -40,19 +40,19 @@ export default function WishlistCard({ item, onRemove, onOrder }) {
       </div>
 
       {/* Content */}
-      <div className="p-4 sm:p-5 flex flex-col gap-2">
-        <h3 className="font-semibold text-text-dark text-sm leading-snug line-clamp-2 min-h-[2.5rem]">
+      <div className="p-3 sm:p-5 flex flex-col gap-1.5 sm:gap-2">
+        <h3 className="font-semibold text-text-dark text-xs sm:text-sm leading-snug line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">
           {item.name}
         </h3>
-        <p className="text-text-muted text-xs leading-relaxed line-clamp-2 min-h-[2rem]">
+        <p className="text-text-muted text-[11px] sm:text-xs leading-relaxed line-clamp-1 sm:line-clamp-2 min-h-0 sm:min-h-[2rem]">
           {item.description}
         </p>
-        <p className="text-navy font-bold text-lg mt-1">
+        <p className="text-navy font-bold text-base sm:text-lg mt-1 break-all">
           {formatPrice(item.price)}
         </p>
 
         {/* Action Buttons */}
-        <div className="flex gap-2 mt-2">
+        <div className="flex flex-col min-[480px]:flex-row gap-1.5 sm:gap-2 mt-2">
           <button
             onClick={handleRemove}
             disabled={removing}

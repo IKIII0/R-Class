@@ -58,9 +58,9 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-10">
       {/* Header */}
-      <div className="bg-gradient-to-r from-accent/5 to-accent-soft rounded-2xl p-6 sm:p-8 mb-8 border border-accent/10">
+      <div className="bg-gradient-to-r from-accent/5 to-accent-soft rounded-2xl p-4 sm:p-8 mb-6 sm:mb-8 border border-accent/10">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center">
             <FiHeart className="text-2xl text-accent" />
@@ -93,7 +93,7 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {wishlistItems.map((item) => (
             <WishlistCard
               key={item.wishlist_id}
