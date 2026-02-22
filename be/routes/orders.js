@@ -39,8 +39,8 @@ router.post("/", async (req, res) => {
 
     // Create order
     const orderResult = await client.query(
-      `INSERT INTO orders (product_id, product_name, product_price, product_image, quantity, total_price, payment_method)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO orders (product_id, product_name, product_price, product_image, quantity, total_price, payment_method, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'proses')
        RETURNING *`,
       [product.id, product.name, product.price, product.image_url, quantity, total_price, payment_method]
     );

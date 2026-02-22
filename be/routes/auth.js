@@ -6,6 +6,7 @@ import admin from "../firebaseAdmin.js";
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "shopwish_secret_key_2026";
+const ADMIN_EMAIL = "shopwish@gmail.com";
 
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
@@ -57,6 +58,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Email atau password salah" });
     }
 
+    const isAdmin = user.email === ADMIN_EMAIL;
     const token = jwt.sign(
       { id: user.id, name: user.name, email: user.email },
       JWT_SECRET,
@@ -65,7 +67,7 @@ router.post("/login", async (req, res) => {
 
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, isAdmin },
     });
   } catch (err) {
     console.error("Error logging in:", err);
@@ -99,6 +101,7 @@ router.post("/google", async (req, res) => {
 
     const user = result.rows[0];
 
+    const isAdmin = user.email === ADMIN_EMAIL;
     const token = jwt.sign(
       { id: user.id, name: user.name, email: user.email },
       JWT_SECRET,
@@ -107,7 +110,7 @@ router.post("/google", async (req, res) => {
 
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, isAdmin },
     });
   } catch (err) {
     console.error("Error with Firebase Google auth:", err);
@@ -135,7 +138,9 @@ router.get("/me", async (req, res) => {
       return res.status(404).json({ error: "User tidak ditemukan" });
     }
 
-    res.json(result.rows[0]);
+    const userData = result.rows[0];
+    userData.isAdmin = userData.email === ADMIN_EMAIL;
+    res.json(userData);
   } catch (err) {
     return res.status(401).json({ error: "Token tidak valid" });
   }

@@ -92,64 +92,73 @@ export default function TransactionPage({ onToast }) {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {orders.map((order, index) => (
-            <div
-              key={order.id}
-              className="bg-surface rounded-2xl border border-card-border hover:border-primary/20 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden animate-fade-in"
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5">
-                {/* Product Image */}
-                <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-xl overflow-hidden bg-bg-main flex-shrink-0 border border-card-border">
-                  <img
-                    src={order.product_image}
-                    alt={order.product_name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Order Details */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-text-dark text-sm sm:text-base truncate">
-                    {order.product_name}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5">
-                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
-                      <FiHash className="text-primary text-[11px]" />
-                      <span className="font-medium text-text-body">#{order.id}</span>
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
-                      <FiCalendar className="text-primary text-[11px]" />
-                      {formatDate(order.order_date)}
-                    </span>
+          {orders.map((order, index) => {
+            const isProses = order.status === "proses";
+            return (
+              <div
+                key={order.id}
+                className="bg-surface rounded-2xl border border-card-border hover:border-primary/20 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden animate-fade-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5">
+                  {/* Product Image */}
+                  <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-xl overflow-hidden bg-bg-main flex-shrink-0 border border-card-border">
+                    <img
+                      src={order.product_image}
+                      alt={order.product_name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
-                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
-                      <FiPackage className="text-primary text-[11px]" />
-                      Qty: <span className="font-medium text-text-body">{order.quantity || 1}</span>
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
-                      <FiCreditCard className="text-primary text-[11px]" />
-                      {PAYMENT_LABELS[order.payment_method] || order.payment_method || "Transfer Bank"}
-                    </span>
-                  </div>
-                </div>
 
-                {/* Price & Status */}
-                <div className="text-right flex-shrink-0">
-                  <p className="text-text-muted text-[11px]">
-                    {order.quantity > 1 ? `${order.quantity} x ${formatPrice(order.product_price)}` : ""}
-                  </p>
-                  <p className="text-navy font-bold text-sm sm:text-lg">
-                    {formatPrice(order.total_price || order.product_price)}
-                  </p>
-                  <span className="inline-block mt-1.5 px-2.5 py-0.5 bg-success-soft text-success text-[10px] font-semibold rounded-full border border-success/15">
-                    Selesai
-                  </span>
+                  {/* Order Details */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-text-dark text-sm sm:text-base truncate">
+                      {order.product_name}
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5">
+                      <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                        <FiHash className="text-primary text-[11px]" />
+                        <span className="font-medium text-text-body">#{order.id}</span>
+                      </span>
+                      <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                        <FiCalendar className="text-primary text-[11px]" />
+                        {formatDate(order.order_date)}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
+                      <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                        <FiPackage className="text-primary text-[11px]" />
+                        Qty: <span className="font-medium text-text-body">{order.quantity || 1}</span>
+                      </span>
+                      <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                        <FiCreditCard className="text-primary text-[11px]" />
+                        {PAYMENT_LABELS[order.payment_method] || order.payment_method || "Transfer Bank"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Price & Status */}
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-text-muted text-[11px]">
+                      {order.quantity > 1 ? `${order.quantity} x ${formatPrice(order.product_price)}` : ""}
+                    </p>
+                    <p className="text-navy font-bold text-sm sm:text-lg">
+                      {formatPrice(order.total_price || order.product_price)}
+                    </p>
+                    {isProses ? (
+                      <span className="inline-block mt-1.5 px-2.5 py-0.5 bg-warning-soft text-warning text-[10px] font-semibold rounded-full border border-warning/15">
+                        Diproses
+                      </span>
+                    ) : (
+                      <span className="inline-block mt-1.5 px-2.5 py-0.5 bg-success-soft text-success text-[10px] font-semibold rounded-full border border-success/15">
+                        Selesai
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {/* Total Summary */}
           <div className="bg-gradient-to-r from-navy to-navy-light rounded-2xl p-5 sm:p-6 mt-3">

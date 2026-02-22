@@ -21,6 +21,10 @@ export const createProduct = (data) => API.post("/admin/products", data);
 export const updateProduct = (id, data) => API.put(`/admin/products/${id}`, data);
 export const deleteProduct = (id) => API.delete(`/admin/products/${id}`);
 
+// Admin — Order Management
+export const getAdminOrders = () => API.get("/admin/orders");
+export const approveOrder = (id) => API.put(`/admin/orders/${id}/approve`);
+
 // Wishlist
 export const getWishlist = () => API.get("/wishlist");
 export const getWishlistCount = () => API.get("/wishlist/count");

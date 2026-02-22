@@ -54,8 +54,10 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const isAdmin = user?.isAdmin === true;
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, googleLogin, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, googleLogin, register, logout, isAuthenticated: !!user, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

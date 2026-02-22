@@ -3,7 +3,7 @@ import { FiShoppingBag, FiHeart, FiClock, FiHome, FiLogOut, FiUser, FiSettings }
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ wishlistCount }) {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -56,10 +56,12 @@ export default function Navbar({ wishlistCount }) {
               <span className="hidden sm:inline">Transactions</span>
             </NavLink>
 
-            <NavLink to="/admin" className={linkClass}>
-              <FiSettings className="text-base" />
-              <span className="hidden sm:inline">Admin</span>
-            </NavLink>
+            {isAdmin && (
+              <NavLink to="/admin" className={linkClass}>
+                <FiSettings className="text-base" />
+                <span className="hidden sm:inline">Admin</span>
+              </NavLink>
+            )}
 
             {/* User & Logout */}
             <div className="flex items-center gap-2 ml-2 pl-2 border-l border-white/10">

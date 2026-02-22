@@ -44,6 +44,7 @@ CREATE TABLE orders (
   quantity INTEGER NOT NULL DEFAULT 1,
   total_price DECIMAL(12, 2) NOT NULL,
   payment_method VARCHAR(50) NOT NULL DEFAULT 'transfer_bank',
+  status VARCHAR(20) NOT NULL DEFAULT 'proses',
   order_date TIMESTAMP DEFAULT NOW()
 );
 
