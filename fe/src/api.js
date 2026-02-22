@@ -16,6 +16,11 @@ API.interceptors.request.use((config) => {
 // Products
 export const getProducts = () => API.get("/products");
 
+// Admin — Product CRUD
+export const createProduct = (data) => API.post("/admin/products", data);
+export const updateProduct = (id, data) => API.put(`/admin/products/${id}`, data);
+export const deleteProduct = (id) => API.delete(`/admin/products/${id}`);
+
 // Wishlist
 export const getWishlist = () => API.get("/wishlist");
 export const getWishlistCount = () => API.get("/wishlist/count");
@@ -26,8 +31,8 @@ export const removeFromWishlist = (productId) =>
 
 // Orders
 export const getOrders = () => API.get("/orders");
-export const createOrder = (product_id) =>
-  API.post("/orders", { product_id });
+export const createOrder = (product_id, quantity, payment_method) =>
+  API.post("/orders", { product_id, quantity, payment_method });
 
 // Auth
 export const registerUser = (name, email, password) =>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getProducts, addToWishlist, getWishlist, createOrder } from "../api";
 import ProductCard from "../components/ProductCard";
+import OrderModal from "../components/OrderModal";
 import { FiSearch, FiPackage } from "react-icons/fi";
 
 export default function CatalogPage({ onToast, refreshWishlist }) {
@@ -8,6 +9,7 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
   const [wishlistIds, setWishlistIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [orderProduct, setOrderProduct] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -43,9 +45,14 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
     }
   };
 
-  const handleOrder = async (productId) => {
+  const handleOpenOrder = (productId) => {
+    const product = products.find((p) => p.id === productId);
+    if (product) setOrderProduct(product);
+  };
+
+  const handleConfirmOrder = async (productId, quantity, paymentMethod) => {
     try {
-      await createOrder(productId);
+      await createOrder(productId, quantity, paymentMethod);
       setWishlistIds((prev) => {
         const next = new Set(prev);
         next.delete(productId);
@@ -79,7 +86,6 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
     <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 lg:px-10 py-6 sm:py-10">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-navy via-navy-light to-slate rounded-2xl sm:rounded-3xl p-5 sm:p-10 lg:p-14 mb-8 sm:mb-10 overflow-hidden">
-        {/* Decorative blurs */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-primary-light/15 rounded-full blur-3xl translate-y-1/3 -translate-x-1/6" />
         <div className="absolute bottom-4 right-8 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
@@ -150,11 +156,20 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
               key={product.id}
               product={product}
               onAddToWishlist={handleAddToWishlist}
-              onOrder={handleOrder}
+              onOrder={handleOpenOrder}
               isInWishlist={wishlistIds.has(product.id)}
             />
           ))}
         </div>
+      )}
+
+      {/* Order Modal */}
+      {orderProduct && (
+        <OrderModal
+          product={orderProduct}
+          onClose={() => setOrderProduct(null)}
+          onConfirm={handleConfirmOrder}
+        />
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiShoppingBag, FiHeart, FiClock, FiHome, FiLogOut, FiUser } from "react-icons/fi";
+import { FiShoppingBag, FiHeart, FiClock, FiHome, FiLogOut, FiUser, FiSettings } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ wishlistCount }) {
@@ -54,6 +54,11 @@ export default function Navbar({ wishlistCount }) {
             <NavLink to="/transactions" className={linkClass}>
               <FiClock className="text-base" />
               <span className="hidden sm:inline">Transactions</span>
+            </NavLink>
+
+            <NavLink to="/admin" className={linkClass}>
+              <FiSettings className="text-base" />
+              <span className="hidden sm:inline">Admin</span>
             </NavLink>
 
             {/* User & Logout */}

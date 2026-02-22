@@ -16,9 +16,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST create an order (and auto-remove from wishlist)
+// POST create an order (with quantity & payment method)
 router.post("/", async (req, res) => {
-  const { product_id } = req.body;
+  const { product_id, quantity = 1, payment_method = "transfer_bank" } = req.body;
   const client = await pool.connect();
 
   try {
@@ -35,13 +35,14 @@ router.post("/", async (req, res) => {
     }
 
     const product = productResult.rows[0];
+    const total_price = parseFloat(product.price) * quantity;
 
     // Create order
     const orderResult = await client.query(
-      `INSERT INTO orders (product_id, product_name, product_price, product_image)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO orders (product_id, product_name, product_price, product_image, quantity, total_price, payment_method)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [product.id, product.name, product.price, product.image_url]
+      [product.id, product.name, product.price, product.image_url, quantity, total_price, payment_method]
     );
 
     // Auto-remove from wishlist if present

@@ -5,6 +5,7 @@ import productsRouter from "./routes/products.js";
 import wishlistRouter from "./routes/wishlist.js";
 import ordersRouter from "./routes/orders.js";
 import authRouter from "./routes/auth.js";
+import adminRouter from "./routes/admin.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 
 // Health check
 app.get("/api/health", (req, res) => {

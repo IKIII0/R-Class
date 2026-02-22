@@ -11,6 +11,7 @@ import WishlistPage from "./pages/WishlistPage";
 import TransactionPage from "./pages/TransactionPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import AdminPage from "./pages/AdminPage";
 import { getWishlistCount } from "./api";
 import { FiShoppingBag } from "react-icons/fi";
 
@@ -90,6 +91,14 @@ function AppLayout() {
               element={
                 <ProtectedRoute>
                   <TransactionPage onToast={addToast} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminPage onToast={addToast} />
                 </ProtectedRoute>
               }
             />

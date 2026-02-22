@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { getOrders } from "../api";
-import { FiClock, FiPackage, FiShoppingBag, FiHash, FiCalendar } from "react-icons/fi";
+import { FiClock, FiPackage, FiShoppingBag, FiHash, FiCalendar, FiCreditCard } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+
+const PAYMENT_LABELS = {
+  transfer_bank: "Transfer Bank",
+  e_wallet: "E-Wallet",
+  cod: "COD",
+};
 
 export default function TransactionPage({ onToast }) {
   const [orders, setOrders] = useState([]);
@@ -117,12 +123,25 @@ export default function TransactionPage({ onToast }) {
                       {formatDate(order.order_date)}
                     </span>
                   </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
+                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                      <FiPackage className="text-primary text-[11px]" />
+                      Qty: <span className="font-medium text-text-body">{order.quantity || 1}</span>
+                    </span>
+                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                      <FiCreditCard className="text-primary text-[11px]" />
+                      {PAYMENT_LABELS[order.payment_method] || order.payment_method || "Transfer Bank"}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Price & Status */}
                 <div className="text-right flex-shrink-0">
+                  <p className="text-text-muted text-[11px]">
+                    {order.quantity > 1 ? `${order.quantity} x ${formatPrice(order.product_price)}` : ""}
+                  </p>
                   <p className="text-navy font-bold text-sm sm:text-lg">
-                    {formatPrice(order.product_price)}
+                    {formatPrice(order.total_price || order.product_price)}
                   </p>
                   <span className="inline-block mt-1.5 px-2.5 py-0.5 bg-success-soft text-success text-[10px] font-semibold rounded-full border border-success/15">
                     Selesai
@@ -137,7 +156,7 @@ export default function TransactionPage({ onToast }) {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-white/70">Total Belanja</span>
               <span className="text-xl sm:text-2xl font-bold text-white">
-                {formatPrice(orders.reduce((sum, o) => sum + parseFloat(o.product_price), 0))}
+                {formatPrice(orders.reduce((sum, o) => sum + parseFloat(o.total_price || o.product_price), 0))}
               </span>
             </div>
           </div>
