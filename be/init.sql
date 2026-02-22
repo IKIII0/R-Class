@@ -30,13 +30,16 @@ CREATE TABLE products (
 -- Wishlists Table
 CREATE TABLE wishlists (
   id SERIAL PRIMARY KEY,
-  product_id INTEGER NOT NULL UNIQUE REFERENCES products(id) ON DELETE CASCADE,
-  created_at TIMESTAMP DEFAULT NOW()
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, product_id)
 );
 
 -- Orders Table
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
   product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
   product_name VARCHAR(255) NOT NULL,
   product_price DECIMAL(12, 2) NOT NULL,

@@ -1,9 +1,13 @@
 import { Router } from "express";
 import pool from "../db.js";
+import authMiddleware from "../middleware/auth.js";
 
 const router = Router();
 
-// GET all wishlist items (joined with products)
+// All wishlist routes require authentication
+router.use(authMiddleware);
+
+// GET all wishlist items for current user
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(
@@ -11,7 +15,9 @@ router.get("/", async (req, res) => {
               p.name, p.price, p.description, p.image_url
        FROM wishlists w
        JOIN products p ON w.product_id = p.id
-       ORDER BY w.created_at DESC`
+       WHERE w.user_id = $1
+       ORDER BY w.created_at DESC`,
+      [req.user.id]
     );
     res.json(result.rows);
   } catch (err) {
@@ -20,10 +26,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET wishlist count
+// GET wishlist count for current user
 router.get("/count", async (req, res) => {
   try {
-    const result = await pool.query("SELECT COUNT(*) FROM wishlists");
+    const result = await pool.query(
+      "SELECT COUNT(*) FROM wishlists WHERE user_id = $1",
+      [req.user.id]
+    );
     res.json({ count: parseInt(result.rows[0].count) });
   } catch (err) {
     console.error("Error fetching wishlist count:", err);
@@ -35,18 +44,18 @@ router.get("/count", async (req, res) => {
 router.post("/", async (req, res) => {
   const { product_id } = req.body;
   try {
-    // Check if already in wishlist
+    // Check if already in this user's wishlist
     const existing = await pool.query(
-      "SELECT id FROM wishlists WHERE product_id = $1",
-      [product_id]
+      "SELECT id FROM wishlists WHERE product_id = $1 AND user_id = $2",
+      [product_id, req.user.id]
     );
     if (existing.rows.length > 0) {
       return res.status(409).json({ error: "Product already in wishlist" });
     }
 
     const result = await pool.query(
-      "INSERT INTO wishlists (product_id) VALUES ($1) RETURNING *",
-      [product_id]
+      "INSERT INTO wishlists (product_id, user_id) VALUES ($1, $2) RETURNING *",
+      [product_id, req.user.id]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -60,8 +69,8 @@ router.delete("/:productId", async (req, res) => {
   const { productId } = req.params;
   try {
     const result = await pool.query(
-      "DELETE FROM wishlists WHERE product_id = $1 RETURNING *",
-      [productId]
+      "DELETE FROM wishlists WHERE product_id = $1 AND user_id = $2 RETURNING *",
+      [productId, req.user.id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Product not found in wishlist" });

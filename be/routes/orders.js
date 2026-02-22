@@ -1,13 +1,18 @@
 import { Router } from "express";
 import pool from "../db.js";
+import authMiddleware from "../middleware/auth.js";
 
 const router = Router();
 
-// GET all orders
+// All order routes require authentication
+router.use(authMiddleware);
+
+// GET orders for current user
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM orders ORDER BY order_date DESC"
+      "SELECT * FROM orders WHERE user_id = $1 ORDER BY order_date DESC",
+      [req.user.id]
     );
     res.json(result.rows);
   } catch (err) {
@@ -37,17 +42,18 @@ router.post("/", async (req, res) => {
     const product = productResult.rows[0];
     const total_price = parseFloat(product.price) * quantity;
 
-    // Create order
+    // Create order with user_id
     const orderResult = await client.query(
-      `INSERT INTO orders (product_id, product_name, product_price, product_image, quantity, total_price, payment_method, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, 'proses')
+      `INSERT INTO orders (user_id, product_id, product_name, product_price, product_image, quantity, total_price, payment_method, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'proses')
        RETURNING *`,
-      [product.id, product.name, product.price, product.image_url, quantity, total_price, payment_method]
+      [req.user.id, product.id, product.name, product.price, product.image_url, quantity, total_price, payment_method]
     );
 
-    // Auto-remove from wishlist if present
-    await client.query("DELETE FROM wishlists WHERE product_id = $1", [
+    // Auto-remove from this user's wishlist if present
+    await client.query("DELETE FROM wishlists WHERE product_id = $1 AND user_id = $2", [
       product_id,
+      req.user.id,
     ]);
 
     await client.query("COMMIT");
