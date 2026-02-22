@@ -1,7 +1,7 @@
 import "./index.css";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Toast from "./components/Toast";
@@ -19,6 +19,7 @@ function AppLayout() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [toasts, setToasts] = useState([]);
   const location = useLocation();
+  const { isAdmin, isAuthenticated } = useAuth();
 
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
 
@@ -32,10 +33,10 @@ function AppLayout() {
   }, []);
 
   useEffect(() => {
-    if (!isAuthPage) {
+    if (!isAuthPage && !isAdmin) {
       fetchWishlistCount();
     }
-  }, [fetchWishlistCount, isAuthPage]);
+  }, [fetchWishlistCount, isAuthPage, isAdmin]);
 
   const addToast = (message, type = "success") => {
     const id = Date.now();
@@ -64,44 +65,55 @@ function AppLayout() {
 
         <main className="flex-1 relative z-10">
           <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <CatalogPage
-                    onToast={addToast}
-                    refreshWishlist={fetchWishlistCount}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/wishlist"
-              element={
-                <ProtectedRoute>
-                  <WishlistPage
-                    onToast={addToast}
-                    refreshWishlist={fetchWishlistCount}
-                  />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/transactions"
-              element={
-                <ProtectedRoute>
-                  <TransactionPage onToast={addToast} />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminPage onToast={addToast} />
-                </ProtectedRoute>
-              }
-            />
+            {isAdmin ? (
+              /* Admin: only admin panel, redirect everything else to /admin */
+              <>
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <AdminPage onToast={addToast} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/admin" replace />} />
+              </>
+            ) : (
+              /* Regular user: catalog, wishlist, transactions */
+              <>
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <CatalogPage
+                        onToast={addToast}
+                        refreshWishlist={fetchWishlistCount}
+                      />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/wishlist"
+                  element={
+                    <ProtectedRoute>
+                      <WishlistPage
+                        onToast={addToast}
+                        refreshWishlist={fetchWishlistCount}
+                      />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/transactions"
+                  element={
+                    <ProtectedRoute>
+                      <TransactionPage onToast={addToast} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </>
+            )}
           </Routes>
         </main>
 
