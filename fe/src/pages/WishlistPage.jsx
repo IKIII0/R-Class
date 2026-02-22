@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { getWishlist, removeFromWishlist, createOrder, getProducts } from "../api";
+import {
+  getWishlist,
+  removeFromWishlist,
+  createOrder,
+  getProducts,
+} from "../api";
 import WishlistCard from "../components/WishlistCard";
 import OrderModal from "../components/OrderModal";
 import { FiHeart, FiShoppingBag, FiTrash2 } from "react-icons/fi";
@@ -34,7 +39,9 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
   const handleRemove = async (productId) => {
     try {
       await removeFromWishlist(productId);
-      setWishlistItems((prev) => prev.filter((item) => item.product_id !== productId));
+      setWishlistItems((prev) =>
+        prev.filter((item) => item.product_id !== productId),
+      );
       onToast("Dihapus dari wishlist", "success");
       refreshWishlist();
     } catch (err) {
@@ -50,7 +57,9 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
   const handleConfirmOrder = async (productId, quantity, paymentMethod) => {
     try {
       await createOrder(productId, quantity, paymentMethod);
-      setWishlistItems((prev) => prev.filter((item) => item.product_id !== productId));
+      setWishlistItems((prev) =>
+        prev.filter((item) => item.product_id !== productId),
+      );
       onToast("Pesanan berhasil dibuat", "success");
       refreshWishlist();
     } catch (err) {
@@ -93,9 +102,12 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
           <div className="w-24 h-24 bg-bg-main rounded-full flex items-center justify-center mb-5 border-2 border-card-border">
             <FiHeart className="text-4xl text-text-muted" />
           </div>
-          <h2 className="text-xl font-semibold text-text-dark mb-2">Wishlist kosong</h2>
+          <h2 className="text-xl font-semibold text-text-dark mb-2">
+            Wishlist kosong
+          </h2>
           <p className="text-text-muted text-sm mb-7 text-center max-w-sm leading-relaxed">
-            Belum ada produk yang disimpan di wishlist kamu. Jelajahi katalog untuk menemukan produk favoritmu.
+            Belum ada produk yang disimpan di wishlist kamu. Jelajahi katalog
+            untuk menemukan produk favoritmu.
           </p>
           <button
             onClick={() => navigate("/")}

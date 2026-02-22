@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Toast from "./components/Toast";
 import ParticleBackground from "./components/ParticleBackground";
+import SplashScreen from "./components/SplashScreen";
 import CatalogPage from "./pages/CatalogPage";
 import WishlistPage from "./pages/WishlistPage";
 import TransactionPage from "./pages/TransactionPage";
@@ -190,6 +191,12 @@ function AppLayout() {
 }
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
+
   return (
     <BrowserRouter>
       <AuthProvider>
