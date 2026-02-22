@@ -15,7 +15,10 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
 
   const fetchData = async () => {
     try {
-      const [prodRes, wishRes] = await Promise.all([getProducts(), getWishlist()]);
+      const [prodRes, wishRes] = await Promise.all([
+        getProducts(),
+        getWishlist(),
+      ]);
       setProducts(prodRes.data);
       setWishlistIds(new Set(wishRes.data.map((w) => w.product_id)));
     } catch (err) {
@@ -29,7 +32,7 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
     try {
       await addToWishlist(productId);
       setWishlistIds((prev) => new Set([...prev, productId]));
-      onToast("Ditambahkan ke wishlist! 💙", "success");
+      onToast("Ditambahkan ke wishlist", "success");
       refreshWishlist();
     } catch (err) {
       if (err.response?.status === 409) {
@@ -48,7 +51,7 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
         next.delete(productId);
         return next;
       });
-      onToast("Pesanan berhasil dibuat! 🎉", "success");
+      onToast("Pesanan berhasil dibuat", "success");
       refreshWishlist();
     } catch (err) {
       onToast("Gagal membuat pesanan", "error");
@@ -58,7 +61,7 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
   const filteredProducts = products.filter(
     (p) =>
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase())
+      p.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   if (loading) {
@@ -87,10 +90,13 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
             Koleksi Terbaru Tersedia
           </span>
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 tracking-tight leading-tight">
-            Temukan Produk<br />Impianmu
+            Temukan Produk
+            <br />
+            Impianmu
           </h1>
           <p className="text-white/60 text-sm sm:text-base max-w-lg leading-relaxed">
-            Jelajahi koleksi produk teknologi & gaya hidup pilihan kami. Tambahkan ke wishlist atau pesan langsung.
+            Jelajahi koleksi produk teknologi & gaya hidup pilihan kami.
+            Tambahkan ke wishlist atau pesan langsung.
           </p>
 
           {/* Search Bar */}
@@ -117,7 +123,9 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
           </div>
           <div>
             <h2 className="text-lg font-bold text-text-dark">Semua Produk</h2>
-            <p className="text-text-muted text-xs">{filteredProducts.length} produk tersedia</p>
+            <p className="text-text-muted text-xs">
+              {filteredProducts.length} produk tersedia
+            </p>
           </div>
         </div>
       </div>
@@ -128,8 +136,12 @@ export default function CatalogPage({ onToast, refreshWishlist }) {
           <div className="w-20 h-20 bg-bg-main rounded-full flex items-center justify-center mb-5 border-2 border-card-border">
             <FiSearch className="text-3xl text-text-muted" />
           </div>
-          <p className="text-text-dark font-semibold text-base">Produk tidak ditemukan</p>
-          <p className="text-text-muted text-sm mt-1">Coba kata pencarian lain</p>
+          <p className="text-text-dark font-semibold text-base">
+            Produk tidak ditemukan
+          </p>
+          <p className="text-text-muted text-sm mt-1">
+            Coba kata pencarian lain
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">

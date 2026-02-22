@@ -1,7 +1,16 @@
-import { NavLink } from "react-router-dom";
-import { FiShoppingBag, FiHeart, FiClock, FiHome } from "react-icons/fi";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FiShoppingBag, FiHeart, FiClock, FiHome, FiLogOut, FiUser } from "react-icons/fi";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ wishlistCount }) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   const linkClass = ({ isActive }) =>
     `flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
       isActive
@@ -46,6 +55,24 @@ export default function Navbar({ wishlistCount }) {
               <FiClock className="text-base" />
               <span className="hidden sm:inline">Transactions</span>
             </NavLink>
+
+            {/* User & Logout */}
+            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-white/10">
+              {user && (
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5">
+                  <FiUser className="text-primary-light text-sm" />
+                  <span className="text-white/80 text-xs font-medium max-w-[100px] truncate">{user.name}</span>
+                </div>
+              )}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-white/60 hover:bg-accent/15 hover:text-accent-light transition-all duration-200 cursor-pointer"
+                title="Logout"
+              >
+                <FiLogOut className="text-base" />
+                <span className="hidden sm:inline">Keluar</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

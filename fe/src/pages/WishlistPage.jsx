@@ -39,7 +39,7 @@ export default function WishlistPage({ onToast, refreshWishlist }) {
     try {
       await createOrder(productId);
       setWishlistItems((prev) => prev.filter((item) => item.product_id !== productId));
-      onToast("Pesanan berhasil dibuat! 🎉", "success");
+      onToast("Pesanan berhasil dibuat", "success");
       refreshWishlist();
     } catch (err) {
       onToast("Gagal membuat pesanan", "error");

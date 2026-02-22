@@ -1,31 +1,40 @@
 import "./index.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Toast from "./components/Toast";
 import ParticleBackground from "./components/ParticleBackground";
 import CatalogPage from "./pages/CatalogPage";
 import WishlistPage from "./pages/WishlistPage";
 import TransactionPage from "./pages/TransactionPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import { getWishlistCount } from "./api";
 import { FiShoppingBag } from "react-icons/fi";
 
-function App() {
+function AppLayout() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [toasts, setToasts] = useState([]);
+  const location = useLocation();
+
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
 
   const fetchWishlistCount = useCallback(async () => {
     try {
       const res = await getWishlistCount();
       setWishlistCount(res.data.count);
     } catch (err) {
-      console.error("Failed to fetch wishlist count");
+      // User may not be logged in yet
     }
   }, []);
 
   useEffect(() => {
-    fetchWishlistCount();
-  }, [fetchWishlistCount]);
+    if (!isAuthPage) {
+      fetchWishlistCount();
+    }
+  }, [fetchWishlistCount, isAuthPage]);
 
   const addToast = (message, type = "success") => {
     const id = Date.now();
@@ -36,8 +45,18 @@ function App() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  // Auth pages: no Navbar, no Footer, no ParticleBackground (pages have their own)
+  if (isAuthPage) {
+    return (
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+    );
+  }
+
   return (
-    <BrowserRouter>
+    <>
       <div className="min-h-screen bg-bg-main flex flex-col relative">
         <ParticleBackground />
         <Navbar wishlistCount={wishlistCount} />
@@ -47,24 +66,32 @@ function App() {
             <Route
               path="/"
               element={
-                <CatalogPage
-                  onToast={addToast}
-                  refreshWishlist={fetchWishlistCount}
-                />
+                <ProtectedRoute>
+                  <CatalogPage
+                    onToast={addToast}
+                    refreshWishlist={fetchWishlistCount}
+                  />
+                </ProtectedRoute>
               }
             />
             <Route
               path="/wishlist"
               element={
-                <WishlistPage
-                  onToast={addToast}
-                  refreshWishlist={fetchWishlistCount}
-                />
+                <ProtectedRoute>
+                  <WishlistPage
+                    onToast={addToast}
+                    refreshWishlist={fetchWishlistCount}
+                  />
+                </ProtectedRoute>
               }
             />
             <Route
               path="/transactions"
-              element={<TransactionPage onToast={addToast} />}
+              element={
+                <ProtectedRoute>
+                  <TransactionPage onToast={addToast} />
+                </ProtectedRoute>
+              }
             />
           </Routes>
         </main>
@@ -137,6 +164,16 @@ function App() {
           </div>
         </footer>
       </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppLayout />
+      </AuthProvider>
     </BrowserRouter>
   );
 }
